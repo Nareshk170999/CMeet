@@ -4,7 +4,9 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/CMeet/', // Set the base path for deployment
+  // Use a relative base so the built assets load correctly when the app is
+  // hosted from a subpath (e.g. GitHub Pages or nested deployments).
+  base: './',
   build: {
     outDir: 'dist', // Output directory for the build
     assetsDir: 'assets',
