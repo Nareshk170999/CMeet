@@ -1,0 +1,7 @@
+{
+  "name": "Cognicx Meet",
+  "description": "Cognicx Meet - Secure conference application.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
