@@ -16,7 +16,7 @@ const ParticipantListSidebar: React.FC<ParticipantListSidebarProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="absolute right-0 top-0 h-full w-80 md:w-96 bg-[#202124] border-l border-gray-800 shadow-2xl z-[40] flex flex-col pt-20 pb-24">
+    <div className="absolute right-0 top-0 h-full w-80 md:w-96 bg-[#0f1512] border-l border-[#1f2c25] shadow-2xl z-[40] flex flex-col pt-20 pb-24">
       {/* Header */}
       <div className="px-6 py-4 flex justify-between items-center border-b border-gray-800">
         <h2 className="text-white text-lg font-medium">
@@ -51,7 +51,7 @@ const ParticipantListSidebar: React.FC<ParticipantListSidebarProps> = ({
           <input
             type="text"
             placeholder="Search for people"
-            className="w-full bg-[#202124] border border-gray-600 text-white text-sm rounded-md focus:ring-1 focus:ring-[#8ab4f8] focus:border-[#8ab4f8] pl-10 p-2.5 placeholder-gray-400 focus:outline-none"
+            className="w-full bg-[#131d17] border border-[#1f2c25] text-white text-sm rounded-md focus:ring-1 focus:ring-[#66d39d] focus:border-[#66d39d] pl-10 p-2.5 placeholder-gray-400 focus:outline-none"
           />
         </div>
       </div>

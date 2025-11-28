@@ -299,8 +299,8 @@ const ConferenceScreen: React.FC<ConferenceScreenProps> = ({
   );
 
   return (
-    <div className="relative min-h-screen bg-[#202124] text-white overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1f1f1f] via-[#202124] to-[#171717]" />
+    <div className="relative min-h-screen bg-[#0f1512] text-white overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0f1512] via-[#0f1914] to-[#0a100d]" />
 
       <div className="relative z-10 h-full flex flex-col">
         <header className="flex items-center justify-between px-4 sm:px-6 pt-4 pb-2">
