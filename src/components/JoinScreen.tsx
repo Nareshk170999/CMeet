@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { VideoIcon, MicIcon } from "./Icons";
 
+const LOGO_SRC = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='20' fill='%233c4043'/%3E%3Cpath d='M24 34c0-4.418 3.582-8 8-8h14l8 8h14c4.418 0 8 3.582 8 8v20c0 4.418-3.582 8-8 8H32c-4.418 0-8-3.582-8-8z' fill='%238ab4f8'/%3E%3Ccircle cx='34' cy='48' r='6' fill='%23fff'/%3E%3Ccircle cx='54' cy='48' r='6' fill='%23fff'/%3E%3C/svg%3E`;
+
 interface JoinScreenProps {
   onJoin: (name: string, confId: string) => void;
 }
@@ -25,7 +27,7 @@ const JoinScreen: React.FC<JoinScreenProps> = ({ onJoin }) => {
         <div className="w-full max-w-md space-y-8">
           <div className="flex flex-col items-center md:items-start mb-8">
             <img
-              src="https://i.postimg.cc/4xS2G4WJ/image.png"
+              src={LOGO_SRC}
               alt="Cognicx Meet"
               className="h-16 md:h-20 object-contain mb-4"
             />
@@ -84,11 +86,7 @@ const JoinScreen: React.FC<JoinScreenProps> = ({ onJoin }) => {
       <div className="hidden md:flex flex-1 items-center justify-center p-8 bg-[#202124]">
         <div className="relative w-full max-w-lg aspect-video bg-[#3c4043] rounded-2xl shadow-2xl overflow-hidden flex items-center justify-center">
           <div className="text-gray-500 flex flex-col items-center">
-            <img
-              src="https://i.postimg.cc/4xS2G4WJ/image.png"
-              alt="Logo"
-              className="h-24 opacity-20 mb-4"
-            />
+            <img src={LOGO_SRC} alt="Logo" className="h-24 opacity-20 mb-4" />
             <p className="text-xl font-medium opacity-50">
               Secure SIP Conferencing
             </p>
