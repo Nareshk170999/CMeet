@@ -31,7 +31,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
   };
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full h-20 bg-[#202124] border-t border-gray-800 flex items-center justify-between px-4 sm:px-6 z-50">
+    <footer className="fixed bottom-0 left-0 w-full h-20 bg-[#0f1512] border-t border-[#1f2c25] flex items-center justify-between px-4 sm:px-6 z-50">
       {/* Left info */}
       <div className="hidden md:flex items-center gap-3 text-white min-w-[200px]">
         <span className="font-medium text-sm md:text-base">{formatTime()}</span>
@@ -48,7 +48,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
           className={`h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center transition-colors ${
             isMuted
               ? "bg-red-600 hover:bg-red-700 text-white"
-              : "bg-[#3c4043] hover:bg-[#4b4f54] text-white"
+              : "bg-[#1f2c25] hover:bg-[#274030] text-[#e4f3e7]"
           }`}
           title={isMuted ? "Unmute" : "Mute"}
         >
@@ -81,8 +81,8 @@ const ControlBar: React.FC<ControlBarProps> = ({
           onClick={onToggleParticipantList}
           className={`h-10 w-10 flex items-center justify-center rounded-full transition-colors ${
             isParticipantListOpen
-              ? "bg-[#8ab4f8] text-[#202124]"
-              : "hover:bg-[#3c4043] text-white"
+              ? "bg-[#66d39d] text-[#0f1512]"
+              : "hover:bg-[#1f2c25] text-white"
           }`}
           title="Show everyone"
         >

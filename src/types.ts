@@ -6,14 +6,17 @@ export interface Participant {
   isLocal: boolean;
 }
 
-export type ConnectionState = 
+export type ConnectionState =
   | "Idle"
   | "Initializing..."
   | "Requesting Mic..."
   | "Connecting to Server..."
+  | "Connecting to Topic..."
   | "Registering..."
   | "Calling..."
   | "Connected"
+  | "Offline Demo"
+  | `Offline Demo (${string})`
   | "Terminated"
   | "Error";
 

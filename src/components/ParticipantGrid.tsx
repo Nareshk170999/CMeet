@@ -70,7 +70,7 @@ const ParticipantGrid: React.FC<ParticipantGridProps> = ({ participants }) => {
 
             {/* Local mute badge */}
             {p.isLocal && p.isMuted && (
-              <div className="absolute top-4 right-4 bg-[#202124]/80 p-2 rounded-full">
+              <div className="absolute top-4 right-4 bg-[#0f1512]/80 p-2 rounded-full">
                 <MicOffIcon className="w-5 h-5 text-red-500" />
               </div>
             )}

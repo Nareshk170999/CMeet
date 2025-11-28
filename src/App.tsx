@@ -17,7 +17,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#202124]">
+    <div className="min-h-screen w-full bg-[#0f1512]">
       {!isInCall ? (
         <JoinScreen onJoin={handleJoin} />
       ) : (
