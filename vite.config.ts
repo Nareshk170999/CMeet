@@ -4,7 +4,9 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/CMeet/', // Set the base path for deployment
+  // Use the default base path so both dev and production builds serve from the
+  // site root without requiring a subdirectory prefix.
+  base: '/',
   build: {
     outDir: 'dist', // Output directory for the build
     assetsDir: 'assets',
