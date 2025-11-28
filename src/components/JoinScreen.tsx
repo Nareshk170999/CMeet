@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { VideoIcon, MicIcon } from "./Icons";
+import logo from "../assets/logo.svg";
 
 interface JoinScreenProps {
   onJoin: (name: string, confId: string) => void;
@@ -25,7 +26,7 @@ const JoinScreen: React.FC<JoinScreenProps> = ({ onJoin }) => {
         <div className="w-full max-w-md space-y-8">
           <div className="flex flex-col items-center md:items-start mb-8">
             <img
-              src="https://i.postimg.cc/4xS2G4WJ/image.png"
+              src={logo}
               alt="Cognicx Meet"
               className="h-16 md:h-20 object-contain mb-4"
             />
@@ -84,11 +85,7 @@ const JoinScreen: React.FC<JoinScreenProps> = ({ onJoin }) => {
       <div className="hidden md:flex flex-1 items-center justify-center p-8 bg-[#202124]">
         <div className="relative w-full max-w-lg aspect-video bg-[#3c4043] rounded-2xl shadow-2xl overflow-hidden flex items-center justify-center">
           <div className="text-gray-500 flex flex-col items-center">
-            <img
-              src="https://i.postimg.cc/4xS2G4WJ/image.png"
-              alt="Logo"
-              className="h-24 opacity-20 mb-4"
-            />
+            <img src={logo} alt="Logo" className="h-24 opacity-20 mb-4" />
             <p className="text-xl font-medium opacity-50">
               Secure SIP Conferencing
             </p>

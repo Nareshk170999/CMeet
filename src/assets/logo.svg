@@ -1,0 +1,14 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cognicx Meet logo">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop stop-color="#8ab4f8" offset="0%" />
+      <stop stop-color="#7c83ff" offset="100%" />
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="24" fill="#202124" />
+  <rect x="10" y="10" width="100" height="100" rx="20" fill="url(#g)" opacity="0.15" />
+  <path d="M36 46c0-5.523 4.477-10 10-10h28c5.523 0 10 4.477 10 10v28c0 5.523-4.477 10-10 10H46c-5.523 0-10-4.477-10-10V46z" fill="url(#g)" />
+  <path d="M50 56h20a2 2 0 012 2v14a2 2 0 01-2 2H50a2 2 0 01-2-2V58a2 2 0 012-2zm26-4.5a1.5 1.5 0 012.399-1.2l8 6a1.5 1.5 0 01.601 1.2v12.5a1.5 1.5 0 01-2.399 1.2l-8-6A1.5 1.5 0 0176 64.5v-13z" fill="#202124" />
+  <circle cx="42" cy="42" r="8" fill="#202124" />
+  <path d="M40 36h4v12h-4z" fill="#8ab4f8" />
+</svg>
