@@ -1,0 +1,31 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f1724"/>
+      <stop offset="100%" stop-color="#1c252f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg2)" rx="32"/>
+  <rect x="60" y="60" width="1160" height="600" rx="28" fill="#121821" stroke="#46c196" stroke-width="2"/>
+  <text x="100" y="120" fill="#e9eef3" font-family="'Inter',sans-serif" font-size="36" font-weight="700">CMeet Live Conference</text>
+  <text x="100" y="158" fill="#94a3b8" font-family="'Inter',sans-serif" font-size="18">SIP.js audio call + /topic/conference/{id} roster events with mute/speaking states.</text>
+  <g transform="translate(100 200)" fill="#1d2630" stroke="#46c196" stroke-width="2">
+    <rect width="320" height="150" rx="16"/>
+    <rect x="360" width="320" height="150" rx="16"/>
+    <rect x="720" width="320" height="150" rx="16"/>
+    <rect y="170" width="320" height="150" rx="16"/>
+    <rect x="360" y="170" width="320" height="150" rx="16"/>
+    <rect x="720" y="170" width="320" height="150" rx="16"/>
+  </g>
+  <g fill="#e9eef3" font-family="'Inter',sans-serif" font-size="16" font-weight="600">
+    <text x="130" y="240">You (Local) · mic toggle</text>
+    <text x="490" y="240">Naresh (Agent)</text>
+    <text x="850" y="240">Veera (Customer)</text>
+    <text x="130" y="410">Guest 1</text>
+    <text x="490" y="410">Guest 2</text>
+    <text x="850" y="410">Guest 3</text>
+  </g>
+  <rect x="100" y="540" width="1040" height="70" rx="18" fill="#1d2630" stroke="#46c196" stroke-width="2"/>
+  <text x="130" y="582" fill="#e9eef3" font-family="'Inter',sans-serif" font-size="16">Control bar: mute/unmute · participant list · invite modal · leave</text>
+  <text x="100" y="640" fill="#46c196" font-family="'Inter',sans-serif" font-size="16">Status chip reflects SIP connection / ICE state; roster reflects JOINED/LEFT/MUTED/UNMUTED.</text>
+</svg>

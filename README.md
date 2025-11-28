@@ -18,3 +18,11 @@ View your app in AI Studio: https://ai.studio/apps/drive/1RfKOLMMWu326sud1A06AMS
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Example screens
+
+### Invite flow
+![CMeet invite screen](docs/cmeet-landing.svg)
+
+### Live conference
+![CMeet conference screen](docs/cmeet-conference.svg)
