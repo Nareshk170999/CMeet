@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import SockJS from "sockjs-client";
 import Stomp, { type Client, type Message, type Subscription } from "stompjs";
 import { Inviter, UserAgent } from "sip.js";
+import logoUrl from "../assets/cognicx-logo.svg";
 import { ConnectionState, Participant } from "../types";
 import ControlBar from "./ControlBar";
 import ParticipantGrid from "./ParticipantGrid";
@@ -14,7 +15,7 @@ interface ConferenceScreenProps {
   onLeave: () => void;
 }
 
-const LOGO_SRC = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='20' fill='%233c4043'/%3E%3Cpath d='M24 34c0-4.418 3.582-8 8-8h14l8 8h14c4.418 0 8 3.582 8 8v20c0 4.418-3.582 8-8 8H32c-4.418 0-8-3.582-8-8z' fill='%238ab4f8'/%3E%3Ccircle cx='34' cy='48' r='6' fill='%23fff'/%3E%3Ccircle cx='54' cy='48' r='6' fill='%23fff'/%3E%3C/svg%3E`;
+const LOGO_SRC = logoUrl;
 
 const ConferenceScreen: React.FC<ConferenceScreenProps> = ({
   conferenceId,

@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
+import logoUrl from "../assets/cognicx-logo.svg";
 import { VideoIcon, MicIcon } from "./Icons";
 
-const LOGO_SRC = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 64'%3E%3Crect width='220' height='64' rx='16' fill='%23101612'/%3E%3Cpath d='M38.4 16.5C27 16.5 18 24.8 18 35.6c0 10.9 9 19.2 20.4 19.2 8.8 0 14.9-4 18.8-10.2l-8.8-5c-1.8 3.2-4.6 5-8 5-5.8 0-9.9-4.5-9.9-9s4-8.9 9.9-8.9c3.3 0 6.1 1.6 7.9 4.6l8.8-5C53 20.2 46.8 16.5 38.4 16.5Z' fill='%2349c273'/%3E%3Cpath d='M141.6 54.8c11.4 0 20.4-8.3 20.4-19.2 0-10.8-9-19.1-20.4-19.1-8.4 0-14.6 3.7-18.9 9.8l8.8 5c1.8-3 4.7-4.6 8-4.6 5.8 0 9.9 4.4 9.9 8.9 0 4.5-4.1 9-9.9 9-3.4 0-6.2-1.8-8-5l-8.8 5c4 6.2 10 10.2 18.9 10.2Z' fill='%2349c273'/%3E%3Crect x='91' y='17' width='14' height='30' rx='7' fill='%2322a35a'/%3E%3Crect x='104.5' y='24' width='14' height='30' rx='7' transform='rotate(-38 104.5 24)' fill='%231d8d4e'/%3E%3Ctext x='64' y='44' font-family='Arial,sans-serif' font-size='20' fill='%23e4f3e7' font-weight='600'>CMeet%3C/text%3E%3C/svg%3E`;
+const LOGO_SRC = logoUrl;
 
 interface JoinScreenProps {
   onJoin: (name: string, confId: string) => void;
