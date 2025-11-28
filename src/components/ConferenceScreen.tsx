@@ -1,4 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import type { Client, Message, Subscription } from "stompjs";
 import { ConnectionState, Participant } from "../types";
 import ControlBar from "./ControlBar";
 import ParticipantGrid from "./ParticipantGrid";
@@ -26,8 +29,8 @@ const ConferenceScreen: React.FC<ConferenceScreenProps> = ({
   const speakingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
-  const connectionRef = useRef<WebSocket | null>(null);
-  const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stompClientRef = useRef<Client | null>(null);
+  const subscriptionRef = useRef<Subscription | null>(null);
   const demoModeRef = useRef(false);
 
   const meetingTitle = useMemo(
@@ -36,183 +39,168 @@ const ConferenceScreen: React.FC<ConferenceScreenProps> = ({
   );
 
   useEffect(() => {
-    demoModeRef.current = false;
-    setConnectionState("Connecting to Server...");
-    const endpoint =
-      import.meta.env.VITE_SIGNALING_URL || "wss://echo.websocket.events";
-
-    let settled = false;
-    let fallbackTimer: ReturnType<typeof setTimeout> | null = null;
-
-    const clearHeartbeat = () => {
-      if (heartbeatRef.current) {
-        clearInterval(heartbeatRef.current);
-        heartbeatRef.current = null;
-      }
-    };
+    const socketUrl = import.meta.env.VITE_SIP_SOCKET_URL;
 
     const activateDemoMode = (reason?: string) => {
       if (demoModeRef.current) return;
       demoModeRef.current = true;
-      settled = true;
-      if (fallbackTimer) {
-        clearTimeout(fallbackTimer);
-      }
-      clearHeartbeat();
-      connectionRef.current?.close();
-      connectionRef.current = null;
-      setConnectionState(
-        reason ? `Offline Demo (${reason})` : "Offline Demo"
-      );
+      setConnectionState(reason ? `Offline Demo (${reason})` : "Offline Demo");
+      setParticipants((prev) => {
+        const local = prev.find((p) => p.isLocal) || {
+          id: "local-user",
+          name: userName || "You",
+          isMuted,
+          isSpeaking: false,
+          isLocal: true,
+        };
+
+        return [
+          local,
+          {
+            id: "p-1",
+            name: "Priya D.",
+            isMuted: false,
+            isSpeaking: false,
+            isLocal: false,
+          },
+          {
+            id: "p-2",
+            name: "Alex R.",
+            isMuted: true,
+            isSpeaking: false,
+            isLocal: false,
+          },
+        ];
+      });
     };
 
-    const ws = new WebSocket(endpoint);
-    connectionRef.current = ws;
+    if (!socketUrl) {
+      activateDemoMode("No signaling URL configured");
+      return;
+    }
 
-    fallbackTimer = setTimeout(() => {
-      if (!settled || connectionRef.current?.readyState !== WebSocket.OPEN) {
-        activateDemoMode("No signaling response");
-      }
-    }, 3500);
+    setConnectionState("Connecting to Server...");
+    demoModeRef.current = false;
 
-    ws.onopen = () => {
-      if (demoModeRef.current) return;
-      settled = true;
-      if (fallbackTimer) {
-        clearTimeout(fallbackTimer);
-      }
-      setConnectionState("Connected");
+    const client: Client = Stomp.over(() => new SockJS(socketUrl));
+    client.debug = () => {};
+    stompClientRef.current = client;
 
-      const joinPayload = {
-        type: "join",
-        room: conferenceId || "demo-room",
-        name: userName || "Guest",
-        ts: Date.now(),
-      };
+    client.connect(
+      {},
+      () => {
+        if (!stompClientRef.current) return;
+        demoModeRef.current = false;
+        setConnectionState("Connecting to Topic...");
 
-      ws.send(JSON.stringify(joinPayload));
+        const subscription = stompClientRef.current.subscribe(
+          `/topic/conference/${conferenceId || "default"}`,
+          (message: Message) => {
+            try {
+              const payload = JSON.parse(message.body);
+              const status = String(payload.status || "").toUpperCase();
+              const participantId =
+                payload.channel ||
+                payload.callerIdNum ||
+                payload.callerIdName ||
+                payload.conferenceId;
 
-      heartbeatRef.current = setInterval(() => {
-        if (connectionRef.current?.readyState === WebSocket.OPEN) {
-          connectionRef.current.send(
-            JSON.stringify({ type: "ping", ts: Date.now() })
-          );
-        }
-      }, 15000);
-    };
+              if (!participantId) return;
 
-    ws.onmessage = (event: MessageEvent<string>) => {
-      if (demoModeRef.current) return;
-      settled = true;
-      if (fallbackTimer) {
-        clearTimeout(fallbackTimer);
-      }
-      try {
-        const payload = JSON.parse(event.data);
+              const participantName =
+                payload.callerIdName ||
+                payload.callerIdNum ||
+                `Participant ${participantId}`;
 
-        if (payload.type === "participants" && Array.isArray(payload.items)) {
-          setParticipants((prev) => {
-            const others = prev.filter((p) => p.isLocal);
-            const remotes: Participant[] = payload.items.map((item: any) => ({
-              id: item.id || item.name,
-              name: item.name || "Guest",
-              isMuted: Boolean(item.isMuted),
-              isSpeaking: Boolean(item.isSpeaking),
-              isLocal: false,
-            }));
-            return [...others, ...remotes];
-          });
-        }
+              setParticipants((prev) => {
+                const local = prev.find((p) => p.isLocal) || {
+                  id: "local-user",
+                  name: userName || "You",
+                  isMuted,
+                  isSpeaking: false,
+                  isLocal: true,
+                };
 
-        if (payload.type === "pong") {
-          setConnectionState("Connected");
-          return;
-        }
+                let remotes = prev.filter((p) => !p.isLocal);
+                const existingIndex = remotes.findIndex(
+                  (p) => p.id === participantId
+                );
 
-        if (payload.type === "join") {
-          setConnectionState("Connected");
-        }
-      } catch (err) {
-        // Ignore non-JSON messages from the echo server but keep the session alive.
-        setConnectionState("Connected");
-      }
-    };
+                if (status === "LEFT") {
+                  remotes = remotes.filter((p) => p.id !== participantId);
+                } else {
+                  const existing =
+                    existingIndex >= 0 ? remotes[existingIndex] : undefined;
+                  const isMutedFromStatus =
+                    status === "MUTED"
+                      ? true
+                      : status === "UNMUTED"
+                        ? false
+                        : Boolean(payload.muted);
 
-    ws.onerror = () => {
-      activateDemoMode("Unable to reach signaling server");
-    };
+                  const updated: Participant = {
+                    id: participantId,
+                    name: participantName,
+                    isMuted: isMutedFromStatus,
+                    isSpeaking: existing?.isSpeaking || false,
+                    isLocal: false,
+                  };
 
-    ws.onclose = (event: CloseEvent) => {
-      if (demoModeRef.current) return;
-      if (fallbackTimer) {
-        clearTimeout(fallbackTimer);
-      }
-      clearHeartbeat();
+                  if (existingIndex >= 0) {
+                    remotes[existingIndex] = {
+                      ...existing,
+                      ...updated,
+                    };
+                  } else {
+                    remotes.push(updated);
+                  }
+                }
 
-      if (!settled || event.code === 1006) {
-        activateDemoMode("Connection lost");
-      } else {
-        setConnectionState((prev) =>
-          prev === "Error" ? "Error" : "Terminated"
+                return [local, ...remotes];
+              });
+
+              setConnectionState("Connected");
+            } catch (error) {
+              setConnectionState("Error");
+            }
+          }
         );
+
+        subscriptionRef.current = subscription;
+      },
+      () => {
+        activateDemoMode("Unable to reach signaling server");
       }
-    };
+    );
 
     return () => {
-      if (fallbackTimer) {
-        clearTimeout(fallbackTimer);
-      }
-      clearHeartbeat();
-      connectionRef.current?.close();
-      connectionRef.current = null;
+      subscriptionRef.current?.unsubscribe();
+      subscriptionRef.current = null;
+      stompClientRef.current?.disconnect(() => undefined);
+      stompClientRef.current = null;
     };
-  }, [conferenceId, userName]);
+  }, [conferenceId, userName, isMuted]);
 
   useEffect(() => {
-    // Seed the room with the local participant plus a couple of friendly faces.
-    const seeded: Participant[] = [
-      {
-        id: "local-user",
-        name: userName || "You",
-        isMuted,
-        isSpeaking: false,
-        isLocal: true,
-      },
-      {
-        id: "p-1",
-        name: "Priya D.",
-        isMuted: false,
-        isSpeaking: false,
-        isLocal: false,
-      },
-      {
-        id: "p-2",
-        name: "Alex R.",
-        isMuted: true,
-        isSpeaking: false,
-        isLocal: false,
-      },
-    ];
-    setParticipants(seeded);
-  }, [userName]);
+    // Keep the local participant anchored while allowing remote updates.
+    const local: Participant = {
+      id: "local-user",
+      name: userName || "You",
+      isMuted,
+      isSpeaking: false,
+      isLocal: true,
+    };
 
-  useEffect(() => {
-    // Keep the local mute flag in sync without resetting the whole roster.
-    setParticipants((prev) =>
-      prev.map((p) =>
-        p.isLocal
-          ? {
-              ...p,
-              isMuted,
-            }
-          : p
-      )
-    );
-  }, [isMuted]);
+    setParticipants((prev) => {
+      const remotes = prev.filter((p) => !p.isLocal);
+      return [local, ...remotes];
+    });
+  }, [userName, isMuted]);
 
   useEffect(() => {
     // Give remote participants a chance to "speak" so the visualizers animate.
     speakingIntervalRef.current = setInterval(() => {
+      if (!demoModeRef.current) return;
       setParticipants((prev) =>
         prev.map((p) =>
           p.isLocal
@@ -237,6 +225,7 @@ const ConferenceScreen: React.FC<ConferenceScreenProps> = ({
     // server is unavailable. We softly rotate who is muted and add/remove a
     // guest to demonstrate live updates.
     const rotateTimer = setInterval(() => {
+      if (!demoModeRef.current) return;
       setParticipants((prev) =>
         prev.map((p, idx) =>
           p.isLocal
@@ -250,6 +239,7 @@ const ConferenceScreen: React.FC<ConferenceScreenProps> = ({
     }, 8000);
 
     const guestTimer = setInterval(() => {
+      if (!demoModeRef.current) return;
       setParticipants((prev) => {
         const hasGuest = prev.some((p) => p.id === "p-guest");
         if (hasGuest) {
